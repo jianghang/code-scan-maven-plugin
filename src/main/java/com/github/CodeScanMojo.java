@@ -29,6 +29,10 @@ import org.antlr.v4.runtime.tree.ParseTreeWalker;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
+import org.apache.maven.plugins.annotations.LifecyclePhase;
+import org.apache.maven.plugins.annotations.Mojo;
+import org.apache.maven.plugins.annotations.Parameter;
+import org.apache.maven.plugins.annotations.ResolutionScope;
 
 import java.io.File;
 import java.nio.file.Path;
@@ -37,43 +41,19 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-/**
- * Goal which scan java code of a project.
- *
- * @goal scan
- * @phase process-sources
- */
+@Mojo(name = "scan", defaultPhase = LifecyclePhase.VERIFY, requiresDependencyResolution = ResolutionScope.NONE, threadSafe = true)
 public class CodeScanMojo extends AbstractMojo {
-    /**
-     * Location of the file.
-     *
-     * @parameter property="project.build.directory"
-     * @required
-     */
+
+    @Parameter(property = "project.build.directory", defaultValue = "${project.build.directory}", required = true)
     private File outputDirectory;
 
-    /**
-     * Location of the file.
-     *
-     * @parameter property="project.build.sourceDirectory"
-     * @required
-     */
+    @Parameter(property = "project.build.sourceDirectory", defaultValue = "${project.build.sourceDirectory}", required = true)
     private File sourceDirectory;
 
-    /**
-     * include classes
-     *
-     * @parameter property="includes"
-     * @required
-     */
+    @Parameter(property = "includes", defaultValue = "${includes}", required = true)
     private String[] includes;
 
-    /**
-     * alarm level
-     *
-     * @parameter property="alarmLevel"
-     * @required
-     */
+    @Parameter(property = "alarmLevel", defaultValue = "${alarmLevel}")
     private String alarmLevel;
 
     @Override
