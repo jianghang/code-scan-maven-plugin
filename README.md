@@ -1,0 +1,22 @@
+```
+<plugin>
+    <groupId>com.github</groupId>
+    <artifactId>code-scan-maven-plugin</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <configuration>
+        <includes>
+            <include>com.github.example.dao.UserMapper</include>
+            <include>com.github.example.entity.User</include>
+        </includes>
+        <alarmLevel>warn</alarmLevel>
+    </configuration>
+    <executions>
+        <execution>
+            <phase>package</phase>
+            <goals>
+                <goal>scan</goal>
+            </goals>
+        </execution>
+    </executions>
+</plugin>
+```
