@@ -58,6 +58,7 @@ public class CodeScanMojo extends AbstractMojo {
 
     @Override
     public void execute() throws MojoExecutionException {
+        String currentPath = null;
         try {
             if (!sourceDirectory.exists()) {
                 throw new MojoExecutionException("scan java code error,sourceDirectory is empty");
@@ -70,7 +71,7 @@ public class CodeScanMojo extends AbstractMojo {
             sourcePathList = sourcePathList.stream().filter(path -> path.toString().contains(".java")).collect(Collectors.toList());
             List<ScanResultInfo> scanResultInfoList = Lists.newArrayList();
             for (Path path : sourcePathList) {
-                getLog().info("scan path: " + path.toString());
+                currentPath = path.toString();
                 CommonTokenStream commonTokenStream = AntlrUtils.getTokenStreamFromFile(path.toString());
                 JavaParser javaParser = new JavaParser(commonTokenStream);
                 ParseTree parseTree = javaParser.compilationUnit();
@@ -96,8 +97,11 @@ public class CodeScanMojo extends AbstractMojo {
                         scanResultInfoList.forEach(scanResultInfo -> getLog().warn(scanResultInfo.toString()));
                 }
             }
+        } catch (MojoFailureException e) {
+            throw new MojoExecutionException("scan java code error message", e);
         } catch (Exception e) {
-            getLog().debug(e);
+            getLog().error(e);
+            getLog().error("scan error path: " + currentPath);
             throw new MojoExecutionException("scan java code error message", e);
         }
     }
